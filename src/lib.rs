@@ -39,9 +39,14 @@ struct Worker {
 }
 
 impl Worker {
-    // Arc (atomic reference counting).
+    // Arc (atomic reference counting).  Arc let's multiple workers own
+    // the receiver.
+
     // Mutex (mutual exclusion) locks request processing to a single
-    // thread.
+    // worker.  Since all workers own the same receiver some locking
+    // mechanism is needed to prevent all of the workers from
+    // processing the same request.
+
     // mpsc (multi-producer; single-consumer) is used for sending
     // messages between threads (channels).
     fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
